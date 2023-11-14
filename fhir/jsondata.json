@@ -1,0 +1,47 @@
+{
+    "resourceType": "Observation",
+    "id": "新的觀測ID",
+    "meta": {
+      "versionId": "1",
+      "lastUpdated": "2023-10-17T12:50:14.279+00:00",
+      "source": "#新的源"
+    },
+    "status": "final",
+    "code": {
+      "coding": [
+        {
+          "system": "http://loinc.org",
+          "code": "XXX",
+          "display": "吸菸成癮"
+        }
+      ],
+      "text": "香煙"
+    },
+    "subject": {
+      "reference": "Patient/11450623"
+    },
+    "effectiveDateTime": "2023-10-17T08:00:00Z",
+    "valueQuantity": {
+      "value": 22,
+      "unit": "IU/mL",
+      "system": "http://unitsofmeasure.org",
+      "code": "IU/mL"
+    },
+    "referenceRange": [
+      {
+        "low": {
+          "value": 0,
+          "unit": "IU/mL",
+          "system": "http://unitsofmeasure.org",
+          "code": "IU/mL"
+        },
+        "high": {
+          "value": 15,
+          "unit": "IU/mL",
+          "system": "http://unitsofmeasure.org",
+          "code": "IU/mL"
+        }
+      }
+    ]
+  }
+  

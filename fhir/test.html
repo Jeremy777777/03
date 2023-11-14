@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>吸菸成癮</title>\
+    <script src="jsondata.json"></script>
+
+    <script>
+        //condition.js
+
+        var conditionObj = {
+            "resourceType": "Observation",
+            "status": "final",
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://loinc.org",
+                        "code": "XXX",
+                        "display": "吸菸成癮"
+                    }
+                ],
+                "text": "香煙"
+            },
+            "subject": {
+                "reference": "Patient/23549468"
+            },
+            "effectiveDateTime": "2023-10-17T08:00:00Z",
+            "valueQuantity": {
+                "value": 10.5,
+                "unit": "IU/mL",
+                "system": "http://unitsofmeasure.org",
+                "code": "IU/mL"
+            },
+            "referenceRange": [
+                {
+                    "low": {
+                        "value": 0.0,
+                        "unit": "IU/mL",
+                        "system": "http://unitsofmeasure.org",
+                        "code": "IU/mL"
+                    },
+                    "high": {
+                        "value": 15.0,
+                        "unit": "IU/mL",
+                        "system": "http://unitsofmeasure.org",
+                        "code": "IU/mL"
+                    }
+                }
+            ]
+        }
+        function postData() {
+            conditionObj.valueQuantity.value = document.getElementById("value").value;
+            // 更新吸菸方式相關的部分
+            var selectElement = document.getElementById("severity");
+
+            // 获取选中的<option>元素
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+
+            // 获取选中项的值和文本
+            conditionObj.code.text = selectedOption.value;
+            //conditionObj.severity.text = severitySelect.options[severitySelect.selectedIndex].text;
+
+            var jsonStr = JSON.stringify(conditionObj);
+            var FHIRrootURL = "https://hapi.fhir.org/baseR4/";
+            var apiURL = FHIRrootURL + "Observation?subject=23549468";
+            HTTPGetData(apiURL, jsonStr);
+        }
+
+        function HTTPGetData(urlStr, dataStr) {
+            var HttpObj = new XMLHttpRequest();
+            HttpObj.open("POST", urlStr, true);
+            HttpObj.setRequestHeader("Content-type", "application/json+fhir");
+            // HttpObj.setRequestHeader("Content-type", "application/xml+fhir");
+            HttpObj.onreadystatechange = function () {
+                //alert(HttpObj.readyState);
+                if (HttpObj.readyState === 4) {
+                    ret = HttpObj.responseText;
+                    alert(ret);
+                    var jsonOBJ = JSON.parse(ret);
+                    if ("id" in jsonOBJ && jsonOBJ.hasOwnProperty("id"))
+                        alert("上傳成功！" + "問卷編號：" + jsonOBJ["id"]);
+                    else
+                        alert("上傳失敗！" + ret);
+                }
+            }
+
+            HttpObj.send(dataStr);
+            //  getData
+        }
+
+
+        function callBack(ret) {
+            console.log(ret);
+        }
+    </script>
+</head>
+
+<body>
+
+    <h1>吸菸成癮</h1>
+
+    <form id="conditionForm">
+        <p>請上傳吸菸資料</p>
+        <!-- 修改相關欄位 -->
+        <label for="onsetDateTime">開始吸菸日期時間:</label>
+        <input type="datetime-local" id="onsetDateTime" value="2023-10-10T16:30:00" /><br /><br />
+
+        <label for="severity">吸菸方式:</label>
+        <select id="severity">
+            <option value="香煙">香煙</option>
+            <option value="煙斗">煙斗</option>
+            <option value="雪茄">雪茄</option>
+            <!-- 添加其他吸菸方式選項 -->
+        </select><br /><br />
+        <label>
+            吸菸量:
+            <input type="text" id="value" name="username">
+        </label>
+        <p></p>
+        <button type="button" onclick="postData()">上傳吸菸資料</button><br /><br />
+    </form>
+</body>
+</body>
+
+</html>
